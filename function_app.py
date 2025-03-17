@@ -1,7 +1,7 @@
 import azure.functions as func
 import logging
 
-app = func.FunctionApp(http_auth_level=func.AuthLevel.FUNCTION)
+app = func.FunctionApp(http_auth_level=func.AuthLevel.ANONYMOUS)
 
 @app.route(route="classifier_endpoint")
 def classifier_endpoint(req: func.HttpRequest) -> func.HttpResponse:
