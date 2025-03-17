@@ -1,25 +1,18 @@
 import azure.functions as func
+from fastapi import FastAPI
 import logging
 
-app = func.FunctionApp(http_auth_level=func.AuthLevel.ANONYMOUS)
+# Create FastAPI app
+app = FastAPI()
 
-@app.route(route="classifier_endpoint")
-def classifier_endpoint(req: func.HttpRequest) -> func.HttpResponse:
-    logging.info('Python HTTP trigger function processed a request.')
+@app.get("/")
+def read_root():
+    return {"message": "Hello from FastAPI in Azure Functions"}
 
-    name = req.params.get('name')
-    if not name:
-        try:
-            req_body = req.get_json()
-        except ValueError:
-            pass
-        else:
-            name = req_body.get('name')
+@app.post("/classifier_endpoint")
+def classifier_endpoint(data: dict):
+    name = data.get("name", "Guest")
+    return {"message": f"Hello, {name}. This HTTP triggered function executed successfully."}
 
-    if name:
-        return func.HttpResponse(f"Hello, {name}. This HTTP triggered function executed successfully.")
-    else:
-        return func.HttpResponse(
-             "This HTTP triggered function executed successfully. Pass a name in the query string or in the request body for a personalized response.",
-             status_code=200
-        )
+# Wrap FastAPI app in Azure Functions
+function_app = func.AsgiFunctionApp(app=app, http_auth_level=func.AuthLevel.ANONYMOUS)
