@@ -133,41 +133,44 @@ app = func.FunctionApp(http_auth_level=func.AuthLevel.ANONYMOUS)
 def classifier_endpoint(req: func.HttpRequest) -> func.HttpResponse:
     logging.info("Processing request for classifier endpoint.")
 
-    try:
-        req_body = req.get_json()
-    except ValueError:
-        return func.HttpResponse(
-            json.dumps({"error": "Invalid JSON format"}),
-            status_code=400,
-            mimetype="application/json"
-        )
+    # try:
+    #     req_body = req.get_json()
+    # except ValueError:
+    #     return func.HttpResponse(
+    #         json.dumps({"error": "Invalid JSON format"}),
+    #         status_code=400,
+    #         mimetype="application/json"
+    #     )
 
-    # Validate the incoming payload using the RequestMSG model.
-    try:
-        request_data = RequestMSG.parse_obj(req_body)
-    except ValidationError as e:
-        return func.HttpResponse(
-            json.dumps({"error": "Payload validation error", "details": e.errors()}),
-            status_code=400,
-            mimetype="application/json"
-        )
+    # # Validate the incoming payload using the RequestMSG model.
+    # try:
+    #     request_data = RequestMSG.parse_obj(req_body)
+    # except ValidationError as e:
+    #     return func.HttpResponse(
+    #         json.dumps({"error": "Payload validation error", "details": e.errors()}),
+    #         status_code=400,
+    #         mimetype="application/json"
+    #     )
 
-    query_type = request_data.query.lower()
+    # query_type = request_data.query.lower()
 
-    # Choose the response type based on the "query" value.
-    if query_type == "json":
-        response_model = create_json_response(request_data)
-    elif query_type == "text":
-        response_model = create_text_response(request_data)
-    elif query_type == "options":
-        response_model = create_options_response(request_data)
-    else:
-        return func.HttpResponse(
-            json.dumps({"error": "Invalid query type. Use 'json', 'text', or 'options'."}),
-            status_code=400,
-            mimetype="application/json"
-        )
+    # # Choose the response type based on the "query" value.
+    # if query_type == "json":
+    #     response_model = create_json_response(request_data)
+    # elif query_type == "text":
+    #     response_model = create_text_response(request_data)
+    # elif query_type == "options":
+    #     response_model = create_options_response(request_data)
+    # else:
+    #     return func.HttpResponse(
+    #         json.dumps({"error": "Invalid query type. Use 'json', 'text', or 'options'."}),
+    #         status_code=400,
+    #         mimetype="application/json"
+    #     )
 
-    # Serialize the Pydantic model to JSON.
-    response_json = response_model.json()
-    return func.HttpResponse(response_json, status_code=200, mimetype="application/json")
+    # # Serialize the Pydantic model to JSON.
+    # response_json = response_model.json()
+    return func.HttpResponse(
+            "This HTTP triggered function executed successfully. Pass a name in the query string or in the request body for a personalized response.",
+            status_code=200
+    )
