@@ -129,7 +129,7 @@ def create_options_response(request_data: RequestMSG) -> ResponseMSG:
 # -----------------------
 app = func.FunctionApp(http_auth_level=func.AuthLevel.ANONYMOUS)
 
-@app.route(route="classifier_endpoint", methods=["POST"])
+@app.route(route="classifier_endpoint")
 def classifier_endpoint(req: func.HttpRequest) -> func.HttpResponse:
     logging.info("Processing request for classifier endpoint.")
 
